@@ -7,6 +7,8 @@ export default function App() {
 
     const [dice, setDice] = React.useState(allNewDice())
     const [tenzies, setTenzies] = React.useState(false)
+    const [rolls, setRolls] = React.useState(0)
+    const [time, setTime] = React.useState(JSON.stringify(new Date().getTime()))
     
     React.useEffect(() => {
         const allHeld = dice.every(die => die.isHeld)
@@ -33,14 +35,21 @@ export default function App() {
         return newDice
     }
     
+    function newTime(){
+      return new Date().getTime()
+    }
+
     function rollDice() {
         if(!tenzies) {
+            setRolls((prevRolls => prevRolls + 1))
             setDice(oldDice => oldDice.map(die => {
                 return die.isHeld ? 
                     die :
                     generateNewDie()
             }))
         } else {
+            setTime(new Date().getTime())
+            setRolls(0)
             setTenzies(false)
             setDice(allNewDice())
         }
@@ -78,6 +87,8 @@ export default function App() {
             >
                 {tenzies ? "New Game" : "Roll"}
             </button>
+            <span>Number of rolls: {rolls} rolls</span>
+            <span>Time Taken: {tenzies ? (newTime() - time)/1000 : 0} second</span>
         </main>
     )
 }
